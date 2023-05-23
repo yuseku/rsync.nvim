@@ -39,6 +39,7 @@ local sync = require("rsync.sync")
 
 vim.api.nvim_create_user_command("RsyncDownFile", function()
     local file = vim.fn.expand("%")
+    print(file)
     sync.sync_down_file(file)
 end, {})
 
@@ -53,6 +54,7 @@ end, { nargs = 1 })
 
 vim.api.nvim_create_user_command("RsyncUpFile", function()
     local file_relative = vim.fn.expand("%:.")
+    print(file_relative)
     sync.sync_up_file(file_relative)
 end, {})
 
