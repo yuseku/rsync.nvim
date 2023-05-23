@@ -86,7 +86,7 @@ end
 --     end
 -- end
 
-function sync.sync_up_file(filename)
+function sync.sync_up_file(filename, extend)
     local config_table = project.get_config_table()
 
     -- TODO redo to not need to copy this
@@ -101,10 +101,15 @@ function sync.sync_up_file(filename)
             end
         end
 
-        local full = vim.fn.expand("%:p")
-        local name = vim.fn.expand("%:t")
         local path = require("plenary.path")
-        
+
+        if extend then
+          local full = filename
+          local name = path:new(full):filename()
+        else
+          local full = vim.fn.expand("%:p")
+          local name = vim.fn.expand("%:t")
+        end
 
         local relative_path = path:new(full):make_relative(config_table["project_path"])
         local rpath_no_filename = string.sub(relative_path, 1, -(1 + string.len(name)))
