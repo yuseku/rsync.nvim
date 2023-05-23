@@ -87,6 +87,8 @@ end
 -- end
 
 function sync.sync_up_file(filename, extend)
+    print(filename)
+
     local config_table = project.get_config_table()
 
     -- TODO redo to not need to copy this
@@ -102,6 +104,24 @@ function sync.sync_up_file(filename, extend)
         end
 
         local path = require("plenary.path")
+
+        -- Remove the root directory from a path
+        local function remove_root_directory(path)
+            -- Get the root directory
+            local root_directory = vim.api.nvim_call_function('getcwd', {})
+
+            -- Escape special characters in the root directory
+            local escaped_root = root_directory:gsub("[%-%.%+%[%]%(%)%$%^%%%?%*]", "%%%1")
+            
+            -- Remove the root directory from the path
+            local result = path:gsub("^" .. escaped_root, "")
+            
+            -- Trim leading slashes, if any
+            result = result:gsub("^/+", "")
+            
+            -- Return the modified path
+            return result
+        end
 
         if extend then
           local full = filename

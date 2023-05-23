@@ -60,7 +60,7 @@ end, {})
 
 vim.api.nvim_create_user_command("RsyncUpFileByPath", function(opts)
     local path = opts.args
-    print(opts.args, opts.args[0])
+    print(opts.args)
     if path then
       sync.sync_up_file(path, true)
     else
