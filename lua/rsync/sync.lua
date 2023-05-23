@@ -104,6 +104,7 @@ function sync.sync_up_file(filename)
         local full = vim.fn.expand("%:p")
         local name = vim.fn.expand("%:t")
         local path = require("plenary.path")
+        
 
         local relative_path = path:new(full):make_relative(config_table["project_path"])
         local rpath_no_filename = string.sub(relative_path, 1, -(1 + string.len(name)))
@@ -115,6 +116,9 @@ function sync.sync_up_file(filename)
             .. config_table["remote_path"]
             .. rpath_no_filename
         local project_path = config_table["project_path"]
+
+        print("full = " .. full, "name = " .. name, "path " .. path, "command " .. command)
+        
         run_sync(command, project_path, function(res)
             _RsyncProjectConfigs[project_path]["sync_status"] = { progress = "start", state = "sync_up", job_id = res }
         end)
