@@ -42,10 +42,28 @@ vim.api.nvim_create_user_command("RsyncDownFile", function()
     sync.sync_down_file(file)
 end, {})
 
+vim.api.nvim_create_user_command("RsyncDownFileByPath", function(args)
+    local path = args[1] -- Retrieve the first argument as the path
+    if path then
+        sync.sync_down_file(path)
+    else
+        print("Please provide a valid path.")
+    end
+end, { nargs = 1 })
+
 vim.api.nvim_create_user_command("RsyncUpFile", function()
     local file_relative = vim.fn.expand("%:.")
     sync.sync_up_file(file_relative)
 end, {})
+
+vim.api.nvim_create_user_command("RsyncUpFile", function(args)
+    local path = args[1] -- Retrieve the first argument as the path
+    if path then
+      sync.sync_up_file(path)
+    else
+        print("Please provide a valid path.")
+    end
+end, { nargs = 1 })
 
 --- get current sync status of project
 M.status = function()
