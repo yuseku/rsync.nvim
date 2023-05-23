@@ -59,15 +59,13 @@ vim.api.nvim_create_user_command("RsyncUpFile", function()
     sync.sync_up_file(file_relative)
 end, {})
 
-vim.api.nvim_create_user_command("RsyncUpFileByPath", function(args)
-    local path = args[1] -- Retrieve the first argument as the path
-    print(args)
-    print(path)
-    if path then
-      sync.sync_up_file(path)
-    else
-        print("Please provide a valid path.")
-    end
+vim.api.nvim_create_user_command("RsyncUpFileByPath", function(opts)
+    print(opts.args)
+    -- if path then
+    --   sync.sync_up_file(path)
+    -- else
+    --     print("Please provide a valid path.")
+    -- end
 end, { nargs = 1 })
 
 --- get current sync status of project
