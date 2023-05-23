@@ -5,37 +5,37 @@ local rsync_nvim = vim.api.nvim_create_augroup("rsync_nvim", { clear = true })
 local project = require("rsync.project")
 local sync = require("rsync.sync")
 
-vim.api.nvim_create_autocmd({ "BufEnter" }, {
-    callback = function()
-        -- only initialize once per buffer
-        if vim.b.rsync_init == nil then
-            -- get config as table if present
-            local config_table = project.get_config_table()
-            if config_table == nil then
-                return
-            end
-            vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-                callback = function()
-                    sync.sync_up()
-                end,
-                group = rsync_nvim,
-                buffer = vim.api.nvim_get_current_buf(),
-            })
-            vim.b.rsync_init = 1
-        end
-    end,
-    group = rsync_nvim,
-})
+-- vim.api.nvim_create_autocmd({ "BufEnter" }, {
+--     callback = function()
+--         -- only initialize once per buffer
+--         if vim.b.rsync_init == nil then
+--             -- get config as table if present
+--             local config_table = project.get_config_table()
+--             if config_table == nil then
+--                 return
+--             end
+--             vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+--                 callback = function()
+--                     sync.sync_up()
+--                 end,
+--                 group = rsync_nvim,
+--                 buffer = vim.api.nvim_get_current_buf(),
+--             })
+--             vim.b.rsync_init = 1
+--         end
+--     end,
+--     group = rsync_nvim,
+-- })
 
 -- sync all files from remote
-vim.api.nvim_create_user_command("RsyncDown", function()
-    sync.sync_down()
-end, {})
+-- vim.api.nvim_create_user_command("RsyncDown", function()
+--     sync.sync_down()
+-- end, {})
 
 -- sync all files to remote
-vim.api.nvim_create_user_command("RsyncUp", function()
-    sync.sync_up()
-end, {})
+-- vim.api.nvim_create_user_command("RsyncUp", function()
+--     sync.sync_up()
+-- end, {})
 
 vim.api.nvim_create_user_command("RsyncDownFile", function()
     local file = vim.fn.expand("%")
