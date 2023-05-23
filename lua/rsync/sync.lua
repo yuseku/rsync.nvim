@@ -86,9 +86,7 @@ end
 --     end
 -- end
 
-function sync.sync_up_file(filename, extend)
-    print(filename)
-
+function sync.sync_up_file(filename)
     local config_table = project.get_config_table()
 
     -- TODO redo to not need to copy this
@@ -122,16 +120,79 @@ function sync.sync_up_file(filename, extend)
             -- Return the modified path
             return result
         end
+  
+        local full = vim.fn.expand("%:p")
+        local name = vim.fn.expand("%:t")
 
-        print(filename)
-    
-        if extend == true then
-          local full = filename
-          local name = filename:match(".+/(.+)$")
-        else
-          local full = vim.fn.expand("%:p")
-          local name = vim.fn.expand("%:t")
+        print(full)
+        print(name)
+        print(path)
+
+        local relative_path = path:new(full):make_relative(config_table["project_path"])
+
+        print(relative_path)
+
+        local rpath_no_filename = string.sub(relative_path, 1, -(1 + string.len(name)))
+
+        print(rpath_no_filename)
+
+        local command = "rsync -az --mkpath "
+            .. config_table["project_path"]
+            .. filename
+            .. " "
+            .. config_table["remote_path"]
+            .. rpath_no_filename
+        local project_path = config_table["project_path"]
+
+        -- print("full = " .. full, "name = " .. name, "path " .. path, "command " .. command)
+        print(command)
+        
+        run_sync(command, project_path, function(res)
+            _RsyncProjectConfigs[project_path]["sync_status"] = { progress = "start", state = "sync_up", job_id = res }
+        end)
+    else
+        vim.api.nvim_err_writeln("Could not find rsync.toml")
+    end
+end
+
+
+function sync.sync_up_file_by_path(filename)
+    local config_table = project.get_config_table()
+
+    -- TODO redo to not need to copy this
+    if config_table ~= nil then
+        if config_table["sync_status"]["progress"] == "start" then
+            if config_table["sync_status"]["state"] ~= "sync_down" then
+                vim.api.nvim_err_writeln("Could not sync down, due to sync still running")
+                return
+            else
+                -- todo convert to jobwait + lua coroutines
+                vim.fn.jobstop(config_table["sync_status"]["job_id"])
+            end
         end
+
+        local path = require("plenary.path")
+
+        -- Remove the root directory from a path
+        local function remove_root_directory(path)
+            -- Get the root directory
+            local root_directory = vim.api.nvim_call_function('getcwd', {})
+
+            -- Escape special characters in the root directory
+            local escaped_root = root_directory:gsub("[%-%.%+%[%]%(%)%$%^%%%?%*]", "%%%1")
+            
+            -- Remove the root directory from the path
+            local result = path:gsub("^" .. escaped_root, "")
+            
+            -- Trim leading slashes, if any
+            result = result:gsub("^/+", "")
+            
+            -- Return the modified path
+            return result
+        end
+    
+        local full = filename
+        local name = filename:match(".+/(.+)$")
 
         print(full)
         print(name)
