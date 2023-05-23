@@ -123,7 +123,9 @@ function sync.sync_up_file(filename, extend)
             return result
         end
 
-        if extend then
+        print(filename)
+    
+        if extend == true then
           local full = filename
           local name = filename:match(".+/(.+)$")
         else

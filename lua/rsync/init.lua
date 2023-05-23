@@ -55,7 +55,7 @@ end, { nargs = 1 })
 vim.api.nvim_create_user_command("RsyncUpFile", function()
     local file_relative = vim.fn.expand("%:.")
     print(file_relative)
-    sync.sync_up_file(file_relative)
+    sync.sync_up_file(file_relative, false)
 end, {})
 
 vim.api.nvim_create_user_command("RsyncUpFileByPath", function(opts)
