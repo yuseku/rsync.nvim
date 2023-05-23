@@ -45,6 +45,7 @@ end, {})
 
 vim.api.nvim_create_user_command("RsyncDownFileByPath", function(args)
     local path = args[1] -- Retrieve the first argument as the path
+    print(path)
     if path then
         sync.sync_down_file(path)
     else
@@ -60,6 +61,7 @@ end, {})
 
 vim.api.nvim_create_user_command("RsyncUpFileByPath", function(args)
     local path = args[1] -- Retrieve the first argument as the path
+    print(path)
     if path then
       sync.sync_up_file(path)
     else
