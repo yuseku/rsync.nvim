@@ -105,7 +105,7 @@ function sync.sync_up_file(filename, extend)
 
         if extend then
           local full = filename
-          local name = path:new(full).filename()
+          local name = path:new(full).expand()
         else
           local full = vim.fn.expand("%:p")
           local name = vim.fn.expand("%:t")
