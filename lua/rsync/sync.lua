@@ -103,24 +103,6 @@ function sync.sync_up_file(filename)
 
         local path = require("plenary.path")
 
-        -- Remove the root directory from a path
-        local function remove_root_directory(path)
-            -- Get the root directory
-            local root_directory = vim.api.nvim_call_function('getcwd', {})
-
-            -- Escape special characters in the root directory
-            local escaped_root = root_directory:gsub("[%-%.%+%[%]%(%)%$%^%%%?%*]", "%%%1")
-            
-            -- Remove the root directory from the path
-            local result = path:gsub("^" .. escaped_root, "")
-            
-            -- Trim leading slashes, if any
-            result = result:gsub("^/+", "")
-            
-            -- Return the modified path
-            return result
-        end
-  
         local full = vim.fn.expand("%:p")
         local name = vim.fn.expand("%:t")
 
@@ -205,6 +187,8 @@ function sync.sync_up_file_by_path(filename)
         local rpath_no_filename = string.sub(relative_path, 1, -(1 + string.len(name)))
 
         print(rpath_no_filename)
+
+        filename = remove_root_directory(filename) 
 
         local command = "rsync -az --mkpath "
             .. config_table["project_path"]
