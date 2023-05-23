@@ -56,7 +56,7 @@ vim.api.nvim_create_user_command("RsyncUpFile", function()
     sync.sync_up_file(file_relative)
 end, {})
 
-vim.api.nvim_create_user_command("RsyncUpFile", function(args)
+vim.api.nvim_create_user_command("RsyncUpFileByPath", function(args)
     local path = args[1] -- Retrieve the first argument as the path
     if path then
       sync.sync_up_file(path)
