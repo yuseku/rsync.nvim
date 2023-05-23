@@ -111,13 +111,16 @@ function sync.sync_up_file(filename, extend)
           local name = vim.fn.expand("%:t")
         end
 
-        local relative_path = path:new(full):make_relative(config_table["project_path"])
-        local rpath_no_filename = string.sub(relative_path, 1, -(1 + string.len(name)))
-
         print(full)
         print(name)
         print(path)
+
+        local relative_path = path:new(full):make_relative(config_table["project_path"])
+
         print(relative_path)
+
+        local rpath_no_filename = string.sub(relative_path, 1, -(1 + string.len(name)))
+
         print(rpath_no_filename)
 
         local command = "rsync -az --mkpath "
